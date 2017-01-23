@@ -4,3 +4,11 @@
 /composer.phar
 /phpunit.xml
 /satis.phar
+/.idea
+/satis.json
+/public/dist/
+/public/include/
+/public/index.html
+/public/packages.json
+
+
