@@ -1,5 +1,5 @@
 # 如何使用
-在项目根目录创建一个配置文件satis.json
+在项目根目录创建一个配置文件satis.json,修改name,homepage,prefix-url等参数
 ```json
 {
   "name": "My Private Composer Repository",
@@ -23,8 +23,12 @@
 ```
 使用命令生成生成仓库列表
 ```bash
-# ./public可自定义
+# ./public为程序根目录
 php bin/satis build satis.json ./public
+```
+启动服务【可选】
+```bash
+php -S 0.0.0.0:80 -t public/
 ```
 
 

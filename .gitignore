@@ -6,5 +6,9 @@
 /satis.phar
 /.idea
 /satis.json
-/public/
+/public/dist/
+/public/include/
+/public/index.html
+/public/packages.json
+
 
