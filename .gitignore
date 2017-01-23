@@ -4,4 +4,7 @@
 /composer.phar
 /phpunit.xml
 /satis.phar
-.idea
+/.idea
+/satis.json
+/public/
+

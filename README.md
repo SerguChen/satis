@@ -1,3 +1,33 @@
+# 如何使用
+在项目根目录创建一个配置文件satis.json
+```json
+{
+  "name": "My Private Composer Repository",
+  "homepage": "http://your.domain.com",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/yonh/satis.git"
+    }
+  ],
+  "require": {
+    "yonh/satis": "*"
+  },
+  "archive": {
+    "directory": "dist",
+    "format": "tar",
+    "skip-dev": false,
+    "prefix-url": "http://your.domain.com"
+  }
+}
+```
+使用命令生成生成仓库列表
+```bash
+# ./public可自定义
+php bin/satis build satis.json ./public
+```
+
+
 # Satis
 
 Simple static Composer repository generator.
