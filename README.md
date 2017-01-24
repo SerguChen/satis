@@ -28,7 +28,8 @@ php bin/satis build satis.json ./public
 ```
 启动服务【可选】
 ```bash
-php -S 0.0.0.0:80 -t public/
+在程序根目录下
+php -S 0.0.0.0:80 -t ./public
 ```
 
 
