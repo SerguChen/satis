@@ -9,13 +9,21 @@
 </center>
 <style>
 #list label {font-size:20px;line-height:25px;height:25px;}
+.span { margin-left:10px;}
 </style>
+<script>
+	function merge()
+	{
+		document.getElementById("merge").onclick=function(){
 
+
+		}
+	}
+</script>
 <?php
 
-$q = $_GET['q'];
-$p = intval($_GET['p']);
-if ($p <1) $p = 1;
+$q = isset($_GET['q'])? $_GET['q']:"";
+$p = isset($_GET['p'])?intval($_GET['p']):1;
 
 echo "<center><div id='list' style='width:400px;text-align:left'>";
 
@@ -23,23 +31,27 @@ if ($q) {
 	$url = "https://packagist.org/search.json?q=" . $q . "&page=" . $p;
 	$result = curl_text($url);
 	$json = @json_decode($result,true);
-	
 	$next = $json['next'];
 	$p++;
-
-	
 	if ($json) {
 		echo "<h1>search packages</h1>";
 		foreach ($json['results'] as $result) {
-			echo "<label><input type='checkbox' name='".$result['name']."' value='".$result['name']."'/>" . $result['name'] . "</label><br/>";
+			echo "<label><input type='checkbox' name='".$result['name']."' value='".$result['name']."'/>" . $result['name'] . "</label><span class='span'><a id='merge' href='admin.php?q=" . $q . "&page=" . $p."&name=".$result['name']."&repository=".base64_encode($result['repository'])."'>at</a></span>
+<br/>";
 		}
 		if ($next) {
 			echo "<a href='/admin.php?q=".$q."&p=".$p."'>next</a>";
 		}
 
-			
+		$repository = isset($_GET['repository']) ? $_GET['repository']:'';
+		$name = isset($_GET['name']) ? $_GET['name']:'';
+		if(!empty($repository) && !empty($name)){
+			repository($name,$repository);
+		}
 
-		
+
+
+
 		echo "<pre>";
 		//print_r($json);
 		//print_r($json);
@@ -49,6 +61,10 @@ if ($q) {
 	}
 }
 
+
+
+
+
 $curr = get_curr();
 echo "<h1>local packages</h1>";
 foreach ($curr['require'] as $pack_name=>$pack_value) {
@@ -57,6 +73,7 @@ foreach ($curr['require'] as $pack_name=>$pack_value) {
 
 
 echo "</div></center>";
+
 
 function get_curr() {
 	$s = file_get_contents(__DIR__ . "/../satis.json");
@@ -89,4 +106,39 @@ function curl_text($url) {
 	curl_close($ch);
 	return $result;
 }
+
+function repository($name,$repository){
+	$fileGet = file_get_contents(__DIR__ . "/../satis.json");
+
+	$fileData = json_decode($fileGet,true);
+	$requireName = array($name => '*');
+
+
+		$merge = array_merge($fileData['require'], $requireName);
+
+	$fileData['require'] = $merge;
+
+	$repositoriesData[] = array(
+		'type' => 'git',
+		'url'  => base64_decode($repository)
+	);
+	$url=array();
+	foreach($fileData['repositories'] as $k=>$v) {
+		$url[] = $v['url'];
+	}
+
+	if (!in_array(base64_decode($repository), $url)) {
+
+		$newData = array_merge($fileData['repositories'], $repositoriesData);
+		$fileData['repositories'] = $newData;
+	}
+	echo '<pre>';
+	print_r($fileData['repositories']);
+	echo '</pre>';
+		file_put_contents(__DIR__ . "/../satis.json",json_encode($fileData));
+
+
+}
+
+
 
