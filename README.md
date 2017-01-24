@@ -31,6 +31,18 @@ php bin/satis build satis.json ./public
 php -S 0.0.0.0:80 -t ./public
 ```
 
+## composer.json添加配置
+```json
+{
+  "repositories": [{
+  "type": "composer",
+  "url": "http://192.168.50.45"
+  }],
+  "config":{
+  	"secure-http":false
+  }
+}
+```
 
 # Satis
 
